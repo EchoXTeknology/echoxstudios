@@ -149,4 +149,4 @@ private:
 
 };
 
-#endif // !ECHOXSTUDIOS_LOGGING_HPP
+#endif // ! ECHOXSTUDIOS_LOGGING_HPP
