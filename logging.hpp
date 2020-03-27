@@ -28,11 +28,33 @@
 #ifndef ECHOXSTUDIOS_LOGGING_HPP
 #define ECHOXSTUDIOS_LOGGING_HPP
 
+/*
+List of common, "comment," references:
+@INDEV
+@TODO
+
+@fileDir
+@logStr
+@sevLev
+@flags
+
+@stampVal
+*/
+
+
+
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
 #include "stdafx.hpp"
 
+
+
+////////////////////////////////////////////////////////////
+// Pre-defined User definitions
+////////////////////////////////////////////////////////////
+typename unsigned int size_t;					// For those that are using standalone compiling...
+								// If not remove, or comment...
 
 
 ////////////////////////////////////////////////////////////
@@ -50,7 +72,7 @@ public:
 	// \param @flags:   For debugging reasons, writes output to a console (if given value of true)
 	//
 	/////////////////////////////////////////////////////////////////////////////////////////////////
-	inline void sErrorLogging(std::string fileDir, std::string logStr, const unsigned int sevLev, bool flags)
+	inline void sErrorLogging(std::string fileDir, std::string logStr, const size_t sevLev, bool flags)
 	{
 		TimeStamp timeStamp;
 
@@ -61,13 +83,13 @@ public:
 
 		switch (flags)
 		{
-		case true:
+		case true:		// Logging is displayed on compiler console window & saved to [fileDir]/FILE
 			std::cout << "[ " << curTime << " ]\t" << logStr << "\t" << "[" << SeverityLevel[sevLev] << "]" << std::endl;
 
 			logStr_s << "[ " << curTime << " ]\t" << logStr << "\t" << "[" << SeverityLevel[sevLev] << "]" << std::endl;
 			logStr_s.close();
 			break;
-		case false:
+		case false:		// Logging is not displayed to compiler console window, as it is saved to [fileDir]/FILE instead
 			logStr_s << "[ " << curTime << " ]\t" << logStr << "\t" << "[" << SeverityLevel[sevLev] << "]" << std::endl;
 			logStr_s.close();
 			break;
@@ -84,11 +106,11 @@ public:
 	// \param @sevLev:  Integer for Severity Level 0 to (n)	[0: HIGHEST, (n): LOWEST]
 	// \param @flags:   For debugging reasons, writes output to a console (if given value of true)
 	//
-	// @BROKEN: DO NOT USE! IS NOT YET CREATED/INITIALIZED!
+	// @INDEV: DO NOT USE! IS NOT YET CREATED/INITIALIZED!
 	/////////////////////////////////////////////////////////////////////////////////////////////////
-	inline void cErrorLogging(const char* fileDir, const char* logStr, const unsigned int sevLev, bool flags)
+	inline void cErrorLogging(const char* fileDir, const char* logStr, const size_t sevLev, bool flags)
 	{
-
+		// @TODO: Create const char* logging system? For cross-platform compatability or standalone projects?
 	}
 
 
@@ -100,9 +122,9 @@ private:
 			"   ERROR   ",	// 1
 			"  WARNING  ",	// 2
 			"   DEBUG   ",	// 3
-			"           ",	// 4
-			"           ",	// 5
-			"           ",	// 6
+			"           ",	// 4		   RESERVED FOR EXTRA LABEL
+			"           ",	// 5		   RESERVED FOR EXTRA LABEL
+			"           ",	// 6		   RESERVED FOR EXTRA LABEL
 							// RESERVED FOR EXTRA LABELS
 	};
 
@@ -120,7 +142,7 @@ private:
 		//
 		// \param @stampVal: initial time stamping value, determines which time stamp to return...
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		inline std::string sTimeStamp(const int stampVal)
+		inline std::string sTimeStamp(const size_t stampVal)
 		{
 			time_t curTime = time(0);
 			struct tm tstruct;
@@ -129,24 +151,27 @@ private:
 
 			switch (stampVal)
 			{
-			case 0:
+			case 0:	// Returns YYYY-MM-DD HH:MM:SS
 				strftime(buf, sizeof(buf), "%Y-%m-%d %X", &tstruct);
-				break;
-			case 1:
+				return std::string(buf);
+			case 1: // Returns YYYY-MM-DD
 				strftime(buf, sizeof(buf), "%Y-%m-%d", &tstruct);
-				break;
-			case 2:
+				return std::string(buf);
+			case 2: // Returns HH:MM:SS
 				strftime(buf, sizeof(buf), "%X", &tstruct);
-				break;
-			default:
+				return std::string(buf);
+			default: // Defaults to Switch Case: (0)
 				strftime(buf, sizeof(buf), "%Y-%m-%d %X", &tstruct);
-				break;
+				return std::string(buf);
 			}
 
+			/////////////////////////////////////////////////////////////////////////////////////////////////
+			// Return std::string(buf), if not done already...
+			/////////////////////////////////////////////////////////////////////////////////////////////////
 			return std::string(buf);
 		}
 	};
 
 };
 
-#endif // ! ECHOXSTUDIOS_LOGGING_HPP
+#endif // !ECHOXSTUDIOS_LOGGING_HPP
